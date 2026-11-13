@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Інтерактивний тренажер: Оформлення книги доходів та витрат</title>
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-light: #eff6ff;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --error: #b91c1c;
+      --error-bg: #fee2e2;
+      --border: #cbd5e1;
+      --text: #1e293b;
+      --bg: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 28px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    header {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+
+    .meta {
+      font-size: 0.95rem;
+      color: #475569;
+    }
+
+    .student-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: var(--primary-light);
+      padding: 14px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .student-bar input {
+      flex: 1;
+      min-width: 220px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .theory-toggle {
+      background: #e2e8f0;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .theory-toggle:hover {
+      background: #cbd5e1;
+    }
+
+    .theory-box {
+      display: none;
+      background: #f1f5f9;
+      border-left: 4px solid var(--primary);
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 22px;
+      font-size: 0.95rem;
+    }
+
+    .situation-card {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+
+    .situation-card h2 {
+      margin-top: 0;
+      font-size: 1.15rem;
+      color: #92400e;
+    }
+
+    .situation-card ol {
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+    }
+
+    h3 {
+      color: var(--primary);
+      margin-top: 28px;
+      margin-bottom: 12px;
+      font-size: 1.2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--primary);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    td.num-col, th.num-col {
+      text-align: center;
+      width: 170px;
+    }
+
+    input[type="number"], select {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      text-align: right;
+    }
+
+    select {
+      text-align: left;
+    }
+
+    input.correct, select.correct {
+      border-color: var(--success);
+      background-color: var(--success-bg);
+    }
+
+    input.incorrect, select.incorrect {
+      border-color: var(--error);
+      background-color: var(--error-bg);
+    }
+
+    tr.total-row td {
+      font-weight: bold;
+      background-color: #f1f5f9;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .calc-item {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    .calc-item label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+
+    .question-block {
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .question-block label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    button.btn-check {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 12px 22px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button.btn-check:hover {
+      background: #1d4ed8;
+    }
+
+    button.btn-reset {
+      background: #64748b;
+      color: #ffffff;
+      border: none;
+      padding: 12px 18px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button.btn-reset:hover {
+      background: #475569;
+    }
+
+    .result-banner {
+      display: none;
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .hint {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-top: -6px;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Практична робота: Оформлення книги «доходів та витрат»</h1>
+    <div class="meta"><strong>Мета:</strong> сформувати вміння вести облік доходів і витрат фізичної особи-підприємця.</div>
+  </header>
+
+  <div class="student-bar">
+    <input type="text" id="studentName" placeholder="Прізвище та ім'я студента" />
+    <input type="text" id="studentGroup" placeholder="Група / професія (напр., слюсар, водій)" />
+  </div>
+
+  <button class="theory-toggle" onclick="toggleTheory()">📘 Показати / приховати теоретичну довідку</button>
+  <div class="theory-box" id="theoryBox">
+    <p><strong>Книга обліку доходів і витрат</strong> — обліковий документ ФОП (форма затверджена наказом Мінфіну від 13.05.2021 № 261), у якому хронологічно фіксуються доходи та документально підтверджені витрати.</p>
+    <ul>
+      <li><strong>Дохід</strong> — грошові кошти, отримані від надання послуг, виконання робіт чи продажу товарів.</li>
+      <li><strong>Витрати</strong> — витрати, пов’язані з господарською діяльністю (запчастини, пальне, оренда тощо).</li>
+      <li><strong>Фінансовий результат</strong> = Доходи − Витрати.</li>
+    </ul>
+  </div>
+
+  <div class="situation-card">
+    <h2>Виробнича ситуація: ФОП Петренко П. П.</h2>
+    <p>Підприємець Петренко П. П. ремонтує сільськогосподарську техніку та автомобілі. Протягом тижня він здійснив такі операції:</p>
+    <ol>
+      <li>Отримав <strong>3 000 грн</strong> за ремонт трактора.</li>
+      <li>Купив запчастини на <strong>800 грн</strong>.</li>
+      <li>Отримав <strong>2 000 грн</strong> за перевезення вантажу.</li>
+      <li>Купив пальне на <strong>500 грн</strong>.</li>
+      <li>Отримав <strong>1 500 грн</strong> за ремонт автомобіля.</li>
+      <li>Заплатив <strong>200 грн</strong> за оренду інструменту.</li>
+    </ol>
+  </div>
+
+  <!-- ЗАВДАННЯ 1 -->
+  <h3>Завдання 1. Заповніть Книгу обліку доходів і витрат</h3>
+  <p class="hint">Внесіть суму у відповідну колонку (дохід або витрата). Якщо показник відсутній, залиште поле порожнім або введіть 0.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 50px; text-align: center;">№</th>
+        <th>Зміст господарської операції</th>
+        <th class="num-col">Дохід, грн</th>
+        <th class="num-col">Витрата, грн</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center;">1</td>
+        <td>Ремонт трактора</td>
+        <td><input type="number" id="inc_1" min="0" placeholder="0" oninput="autoSum()" /></td>
+        <td><input type="number" id="exp_1" min="0" placeholder="0" oninput="autoSum()" /></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">2</td>
+        <td>Купівля запчастин</td>
+        <td><input type="number" id="inc_2" min="0" placeholder="0" oninput="autoSum()" /></td>
+        <td><input type="number" id="exp_2" min="0" placeholder="0" oninput="autoSum()" /></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">3</td>
+        <td>Перевезення вантажу</td>
+        <td><input type="number" id="inc_3" min="0" placeholder="0" oninput="autoSum()" /></td>
+        <td><input type="number" id="exp_3" min="0" placeholder="0" oninput="autoSum()" /></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">4</td>
+        <td>Купівля пального</td>
+        <td><input type="number" id="inc_4" min="0" placeholder="0" oninput="autoSum()" /></td>
+        <td><input type="number" id="exp_4" min="0" placeholder="0" oninput="autoSum()" /></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">5</td>
+        <td>Ремонт автомобіля</td>
+        <td><input type="number" id="inc_5" min="0" placeholder="0" oninput="autoSum()" /></td>
+        <td><input type="number" id="exp_5" min="0" placeholder="0" oninput="autoSum()" /></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">6</td>
+        <td>Оренда інструменту</td>
+        <td><input type="number" id="inc_6" min="0" placeholder="0" oninput="autoSum()" /></td>
+        <td><input type="number" id="exp_6" min="0" placeholder="0" oninput="autoSum()" /></td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="2" style="text-align: right;">Разом (автопідрахунок за таблицею):</td>
+        <td style="text-align: right;" id="tableIncSum">0 грн</td>
+        <td style="text-align: right;" id="tableExpSum">0 грн</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ЗАВДАННЯ 2 -->
+  <h3>Завдання 2. Розрахуйте фінансовий результат</h3>
+  <div class="calc-grid">
+    <div class="calc-item">
+      <label for="totalIncome">1. Усі доходи (грн):</label>
+      <input type="number" id="totalIncome" placeholder="Введіть суму" />
+    </div>
+    <div class="calc-item">
+      <label for="totalExpense">2. Усі витрати (грн):</label>
+      <input type="number" id="totalExpense" placeholder="Введіть суму" />
+    </div>
+    <div class="calc-item">
+      <label for="finResult">3. Фінансовий результат (грн):</label>
+      <input type="number" id="finResult" placeholder="Доходи мінус витрати" />
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 3 -->
+  <h3>Завдання 3. Контрольні запитання</h3>
+
+  <div class="question-block">
+    <label for="q1">1. Що таке дохід?</label>
+    <select id="q1">
+      <option value="">— Оберіть правильне визначення —</option>
+      <option value="wrong1">Сума коштів, витрачена на придбання запчастин та пального</option>
+      <option value="correct">Грошові кошти або матеріальні цінності, отримані від надання послуг, виконання робіт чи продажу товарів</option>
+      <option value="wrong2">Різниця між вартістю техніки та сумою податків</option>
+    </select>
+  </div>
+
+  <div class="question-block">
+    <label for="q2">2. Що таке витрата?</label>
+    <select id="q2">
+      <option value="">— Оберіть правильне визначення —</option>
+      <option value="correct">Документально підтверджені витрати, пов’язані з господарською діяльністю</option>
+      <option value="wrong1">Виручка, отримана підприємцем від клієнтів за тиждень</option>
+      <option value="wrong2">Чистий прибуток підприємця після сплати оренди</option>
+    </select>
+  </div>
+
+  <div class="question-block">
+    <label for="q3">3. Оберіть приклад доходу для тракториста-машиніста:</label>
+    <select id="q3">
+      <option value="">— Оберіть варіант —</option>
+      <option value="wrong1">Купівля дизельного пального та моторної оливи</option>
+      <option value="wrong2">Оплата оренди гаража для зберігання техніки</option>
+      <option value="correct">Оплата, отримана від замовника за оранку поля або перевезення врожаю</option>
+    </select>
+  </div>
+
+  <div class="question-block">
+    <label for="q4">4. Оберіть приклад витрати для водія:</label>
+    <select id="q4">
+      <option value="">— Оберіть варіант —</option>
+      <option value="correct">Придбання пального, автозапчастин або оплата шиномонтажу</option>
+      <option value="wrong1">Отримання плати за доставку вантажу замовнику</option>
+      <option value="wrong2">Виручка від перевезення пасажирів</option>
+    </select>
+  </div>
+
+  <div class="question-block">
+    <label for="q5">5. Який підсумок діяльності отримав підприємець Петренко П. П.?</label>
+    <select id="q5">
+      <option value="">— Оберіть правильний висновок —</option>
+      <option value="correct">Отримав прибуток у розмірі 5 000 грн (доходи більші за витрати)</option>
+      <option value="wrong1">Отримав збиток у розмірі 5 000 грн</option>
+      <option value="wrong2">Отримав прибуток у розмірі 8 000 грн</option>
+    </select>
+  </div>
+
+  <div class="actions">
+    <button class="btn-check" onclick="checkWork()">✅ Перевірити роботу та виставити оцінку</button>
+    <button class="btn-reset" onclick="resetForm()">🔄 Очистити поля</button>
+  </div>
+
+  <div class="result-banner" id="resultBanner"></div>
+</div>
+
+<script>
+  const expectedTable = [
+    { inc: 3000, exp: 0 },
+    { inc: 0, exp: 800 },
+    { inc: 2000, exp: 0 },
+    { inc: 0, exp: 500 },
+    { inc: 1500, exp: 0 },
+    { inc: 0, exp: 200 }
+  ];
+
+  function toggleTheory() {
+    const box = document.getElementById('theoryBox');
+    box.style.display = box.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function autoSum() {
+    let incTotal = 0;
+    let expTotal = 0;
+    for (let i = 1; i <= 6; i++) {
+      incTotal += Number(document.getElementById(`inc_${i}`).value) || 0;
+      expTotal += Number(document.getElementById(`exp_${i}`).value) || 0;
+    }
+    document.getElementById('tableIncSum').textContent = incTotal.toLocaleString('uk-UA') + ' грн';
+    document.getElementById('tableExpSum').textContent = expTotal.toLocaleString('uk-UA') + ' грн';
+  }
+
+  function markField(el, isValid) {
+    el.classList.remove('correct', 'incorrect');
+    el.classList.add(isValid ? 'correct' : 'incorrect');
+    return isValid ? 1 : 0;
+  }
+
+  function checkWork() {
+    let score = 0;
+    const maxScore = 14; // 6 рядків таблиці + 3 розрахунки + 5 запитань
+
+    // Перевірка таблиці (6 балів)
+    expectedTable.forEach((row, idx) => {
+      const i = idx + 1;
+      const incEl = document.getElementById(`inc_${i}`);
+      const expEl = document.getElementById(`exp_${i}`);
+      const incVal = Number(incEl.value) || 0;
+      const expVal = Number(expEl.value) || 0;
+
+      const incOk = incVal === row.inc;
+      const expOk = expVal === row.exp;
+
+      markField(incEl, incOk);
+      markField(expEl, expOk);
+
+      if (incOk && expOk) score++;
+    });
+
+    // Перевірка розрахунків (3 бали)
+    const totIncEl = document.getElementById('totalIncome');
+    const totExpEl = document.getElementById('totalExpense');
+    const finResEl = document.getElementById('finResult');
+
+    score += markField(totIncEl, Number(totIncEl.value) === 6500);
+    score += markField(totExpEl, Number(totExpEl.value) === 1500);
+    score += markField(finResEl, Number(finResEl.value) === 5000);
+
+    // Перевірка тестових запитань (5 балів)
+    for (let q = 1; q <= 5; q++) {
+      const qEl = document.getElementById(`q${q}`);
+      score += markField(qEl, qEl.value === 'correct');
+    }
+
+    // Переведення в 12-бальну шкалу
+    const grade12 = Math.round((score / maxScore) * 12);
+    const name = document.getElementById('studentName').value.trim();
+    const group = document.getElementById('studentGroup').value.trim();
+    const studentInfo = name ? `${name}${group ? ' (' + group + ')' : ''}, ваш` : 'Ваш';
+
+    const banner = document.getElementById('resultBanner');
+    banner.style.display = 'block';
+
+    if (score === maxScore) {
+      banner.style.backgroundColor = '#dcfce7';
+      banner.style.color = '#14532d';
+      banner.style.border = '1px solid #86efac';
+      banner.innerHTML = `🎉 Відмінно! ${studentInfo} результат: <strong>${score} із ${maxScore}</strong> балів. Оцінка за 12-бальною шкалою: <strong>${grade12} балів</strong>.`;
+    } else {
+      banner.style.backgroundColor = '#fef9c3';
+      banner.style.color = '#713f12';
+      banner.style.border = '1px solid #fde047';
+      banner.innerHTML = `📊 Перевірку завершено. ${studentInfo} результат: <strong>${score} із ${maxScore}</strong> правильних елементів. Орієнтовна оцінка: <strong>${grade12} балів</strong>.<br><span style="font-weight:normal; font-size:0.95rem;">Поля, виділені червоним кольором, містять помилку — виправте їх і натисніть перевірку ще раз.</span>`;
+    }
+  }
+
+  function resetForm() {
+    document.querySelectorAll('input[type="number"]').forEach(inp => {
+      inp.value = '';
+      inp.classList.remove('correct', 'incorrect');
+    });
+    document.querySelectorAll('select').forEach(sel => {
+      sel.selectedIndex = 0;
+      sel.classList.remove('correct', 'incorrect');
+    });
+    autoSum();
+    document.getElementById('resultBanner').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
